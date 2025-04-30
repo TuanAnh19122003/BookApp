@@ -1,13 +1,20 @@
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import React, { useState } from 'react';
 import Icon from '@react-native-vector-icons/ionicons';
+import { useDispatch, useSelector } from 'react-redux';
+import { createCategory } from '../../redux/features/category/CategoryAction';
 
-const CategoryNewScreen = ({ navigation }) => {
+const CategoryCreateScreen = ({ navigation }) => {
     const [name, setName] = useState('');
+    const dispatch = useDispatch();
     const hanldeBack = () => {
         navigation.goBack()
     }
     const handleSave = () => {
+        if (name.trim() === '') return;
+
+        const newCategory = { name };
+        dispatch(createCategory(newCategory));
         navigation.goBack();
     };
     return (
@@ -35,7 +42,7 @@ const CategoryNewScreen = ({ navigation }) => {
     )
 }
 
-export default CategoryNewScreen
+export default CategoryCreateScreen
 
 const styles = StyleSheet.create({
     container: {
@@ -65,7 +72,7 @@ const styles = StyleSheet.create({
     },
     input: {
         marginTop: 10,
-        height: 40,
+        height: 50,
         borderWidth: 1,
         padding: 10,
         borderRadius: 10,

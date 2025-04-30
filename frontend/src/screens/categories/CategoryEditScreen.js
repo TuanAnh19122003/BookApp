@@ -1,20 +1,47 @@
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import Icon from '@react-native-vector-icons/ionicons';
+import axiosInstance from '../../util/axiosConfig';
+import { editCategory } from '../../redux/features/category/CategoryAction';
 
-const CategoryEditScreen = ({ navigation }) => {
-    const [name, setName] = useState('Thể loại');
-    const hanldeBack = () => {
+
+const CategoryEditScreen = ({ navigation, route }) => {
+    const id = parseInt(route.params.id);
+    const [name, setName] = useState([]);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        const fetchCategory = async () => {
+            try {
+                const response = await axiosInstance.get(`/categories/${id}`);
+                setName(response.data.name);
+            } catch (error) {
+                console.error('Lỗi khi lấy category:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchCategory();
+    }, [id]);
+
+    const handleBack = () => {
         navigation.goBack()
     }
-    const handleSave = () => {
-        navigation.goBack();
+
+    const handleSave = async () => {
+        try {
+            await dispatch(editCategory(id, { name }));
+            navigation.goBack();
+        } catch (error) {
+            console.error('Lỗi khi cập nhật category:', error);
+        }
     };
 
     return (
         <View style={styles.container}>
             <View style={styles.appbar}>
-                <TouchableOpacity onPress={hanldeBack}>
+                <TouchableOpacity onPress={handleBack}>
                     <Icon name='arrow-back' size={30} />
                 </TouchableOpacity>
                 <Text style={styles.textTitle}>Chỉnh sửa thể loại</Text>

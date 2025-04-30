@@ -1,34 +1,68 @@
-import { StyleSheet, Text, TouchableOpacity, View, ScrollView, Modal } from 'react-native'
-import React, { useState } from 'react'
+import { StyleSheet, Text, TouchableOpacity, View, ScrollView, Modal, FlatList } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { useFocusEffect } from '@react-navigation/native';
 import Icon from '@react-native-vector-icons/ionicons'
-import Icon2 from '@react-native-vector-icons/feather'
+import Icon2 from '@react-native-vector-icons/feather';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllCategories } from '../../redux/features/category/CategoryAction';
+import { deleteCategory } from '../../redux/features/category/CategoryAction';
 
 const CategoryScreen = ({ navigation }) => {
+    const dispatch = useDispatch();
+    const { categories, loading } = useSelector(state => state.categories);
     const [modalVisible, setModalVisible] = useState(false)
     const [selectedCategory, setSelectedCategory] = useState(null)
 
-    const handleDeletePress = (category) => {
-        setSelectedCategory(category)
-        setModalVisible(true)
-    }
+    useFocusEffect(
+        React.useCallback(() => {
+            dispatch(getAllCategories());
+        }, [dispatch])
+    );
 
-    const confirmDelete = () => {
-        console.log('Xoá:', selectedCategory)
-        setModalVisible(false)
-    }
-    const hanldeHome = () => {
+    const handleDeletePress = (category) => {
+        setSelectedCategory(category);
+        setModalVisible(true);
+    };
+
+    const confirmDelete = async () => {
+        if (selectedCategory && selectedCategory.id) {
+            await dispatch(deleteCategory(selectedCategory.id));
+            setModalVisible(false);
+            setSelectedCategory(null);
+        }
+    };
+
+    const handleHome = () => {
         navigation.goBack()
     }
-    const hanldeEdit = () => {
-        navigation.navigate('CategoryEdit')
+    const handleEdit = (id) => {
+        navigation.navigate('CategoryEdit', { id })
     }
-    const hanldeAdd = () => {
+    const handleAdd = () => {
         navigation.navigate('CategoryNew')
     }
+
+    const renderItem = ({ item }) => (
+        <View style={styles.category}>
+            <Text style={styles.text}>{item.name}</Text>
+            <View style={styles.action}>
+                <TouchableOpacity style={[styles.actionBtn, { backgroundColor: '#4CAF50' }]} onPress={() => handleEdit(item.id)} >
+                    <Icon2 name='edit' size={30} style={{ color: '#FFF' }} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.actionBtn}
+                    onPress={() => handleDeletePress(item)}
+                >
+                    <Icon name='remove-circle-outline' size={30} style={{ color: '#FFF' }} />
+                </TouchableOpacity>
+
+            </View>
+        </View>
+    );
     return (
         <View style={styles.container}>
             <View style={styles.appbar}>
-                <TouchableOpacity onPress={hanldeHome}>
+                <TouchableOpacity onPress={handleHome}>
                     <Icon name='arrow-back' size={30} />
                 </TouchableOpacity>
                 <Text style={styles.textTitle}>Thể loại sách</Text>
@@ -39,84 +73,41 @@ const CategoryScreen = ({ navigation }) => {
             <View style={styles.list}>
                 <View style={styles.categoryHeader}>
                     <Text style={styles.textHeader}>Danh sách thể loại</Text>
-                    <TouchableOpacity style={styles.add} onPress={hanldeAdd}>
+                    <TouchableOpacity style={styles.add} onPress={handleAdd}>
                         <Icon name='add-sharp' size={30} />
                         <Text style={styles.textAdd}>New</Text>
                     </TouchableOpacity>
                 </View>
-
-                <ScrollView style={styles.listCategory} contentContainerStyle={{ paddingBottom: 20 }}>
-                    <View style={styles.category}>
-                        <Text style={styles.text}>Thể Thao</Text>
-                        <View style={styles.action}>
-                            <TouchableOpacity style={[styles.actionBtn, { backgroundColor: '#4CAF50' }]} onPress={hanldeEdit}>
-                                <Icon2 name='edit' size={30} style={{ color: '#FFF' }} />
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.actionBtn}
-                                onPress={() => handleDeletePress('Thể Thao')}
-                            >
-                                <Icon name='remove-circle-outline' size={30} style={{ color: '#FFF' }} />
-                            </TouchableOpacity>
-
-                        </View>
-                    </View>
-
-                    <View style={styles.category}>
-                        <Text style={styles.text}>Thể Thao</Text>
-                        <View style={styles.action}>
-                            <TouchableOpacity style={[styles.actionBtn, { backgroundColor: '#4CAF50' }]} onPress={hanldeEdit}>
-                                <Icon2 name='edit' size={30} style={{ color: '#FFF' }} />
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.actionBtn}
-                                onPress={() => handleDeletePress('Thể Thao')}
-                            >
-                                <Icon name='remove-circle-outline' size={30} style={{ color: '#FFF' }} />
-                            </TouchableOpacity>
-
-                        </View>
-                    </View>
-
-                    <View style={styles.category}>
-                        <Text style={styles.text}>Thể Thao</Text>
-                        <View style={styles.action}>
-                            <TouchableOpacity style={[styles.actionBtn, { backgroundColor: '#4CAF50' }]} onPress={hanldeEdit}>
-                                <Icon2 name='edit' size={30} style={{ color: '#FFF' }} />
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.actionBtn}
-                                onPress={() => handleDeletePress('Thể Thao')}
-                            >
-                                <Icon name='remove-circle-outline' size={30} style={{ color: '#FFF' }} />
-                            </TouchableOpacity>
-
-                        </View>
-                    </View>
-
-                </ScrollView>
-                <Modal
-                    visible={modalVisible}
-                    transparent={true}
-                    animationType="fade"
-                    onRequestClose={() => setModalVisible(false)}
-                >
-                    <View style={styles.modalContainer}>
-                        <View style={styles.modalBox}>
-                            <Text style={styles.modalText}>Bạn có chắc muốn xoá "{selectedCategory}"?</Text>
-                            <View style={styles.modalActions}>
-                                <TouchableOpacity style={styles.modalBtnCancel} onPress={() => setModalVisible(false)}>
-                                    <Text style={{ color: '#000' }}>Huỷ</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.modalBtnDelete} onPress={confirmDelete}>
-                                    <Text style={{ color: '#FFF' }}>Xoá</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    </View>
-                </Modal>
-
             </View>
+            {loading ? <Text>Loading...</Text> : null}
+            <FlatList
+                data={categories}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={renderItem}
+                style={{ padding: 10 }}
+            />
+            <Modal
+                visible={modalVisible}
+                transparent={true}
+                animationType="fade"
+                onRequestClose={() => setModalVisible(false)}
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalBox}>
+                        <Text style={styles.modalText}>
+                            Bạn có chắc muốn xoá "{selectedCategory?.name}"?
+                        </Text>
+                        <View style={styles.modalActions}>
+                            <TouchableOpacity style={styles.modalBtnCancel} onPress={() => setModalVisible(false)}>
+                                <Text style={{ color: '#000' }}>Huỷ</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.modalBtnDelete} onPress={confirmDelete}>
+                                <Text style={{ color: '#FFF' }}>Xoá</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
         </View>
     )
 }
@@ -141,8 +132,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     list: {
-        flex: 1,
-        paddingTop: 20,
+        paddingTop: 30,
+        marginBottom: 20,
     },
     textHeader: {
         fontFamily: 'times new roman',

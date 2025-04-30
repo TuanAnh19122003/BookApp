@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAll } from '../../redux/slices/bookSlices';
+import { getAll } from '../../redux/features/book/bookSlices';
 
 const BookScreen = ({ navigation, router }) => {
 const dispatch = useDispatch();

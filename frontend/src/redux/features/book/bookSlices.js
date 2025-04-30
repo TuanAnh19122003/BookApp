@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import axiosInstance from '../../util/axiosConfig';
+import axiosInstance from '../../../util/axiosConfig';
 
 export const getAll = () => async (dispatch) => {
     try {
