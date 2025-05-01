@@ -11,9 +11,16 @@ const port = process.env.PORT || 5001;
 const apiRoutes = require('./src/routes/api'); 
 
 app.use(cors());
-app.use(express.json());
+app.use((req, res, next) => {
+    if (req.is('application/json')) {
+        express.json()(req, res, next);
+    } else {
+        next();
+    }
+});
 
-
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));
 
 connectDB().then(() => {
     app.listen(port, function () {

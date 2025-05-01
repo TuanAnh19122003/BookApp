@@ -9,7 +9,7 @@ import { deleteCategory } from '../../redux/features/category/CategoryAction';
 
 const CategoryScreen = ({ navigation }) => {
     const dispatch = useDispatch();
-    const { categories, loading } = useSelector(state => state.categories);
+    const { categories, loading } = useSelector(state => state.category);
     const [modalVisible, setModalVisible] = useState(false)
     const [selectedCategory, setSelectedCategory] = useState(null)
 
@@ -47,13 +47,13 @@ const CategoryScreen = ({ navigation }) => {
             <Text style={styles.text}>{item.name}</Text>
             <View style={styles.action}>
                 <TouchableOpacity style={[styles.actionBtn, { backgroundColor: '#4CAF50' }]} onPress={() => handleEdit(item.id)} >
-                    <Icon2 name='edit' size={30} style={{ color: '#FFF' }} />
+                    <Icon2 name='edit-3' size={30} style={{ color: '#FFF' }} />
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.actionBtn}
                     onPress={() => handleDeletePress(item)}
                 >
-                    <Icon name='remove-circle-outline' size={30} style={{ color: '#FFF' }} />
+                    <Icon name='trash-outline' size={30} style={{ color: '#FFF' }} />
                 </TouchableOpacity>
 
             </View>
@@ -162,6 +162,8 @@ const styles = StyleSheet.create({
     actionBtn: {
         padding: 5,
         backgroundColor: '#ff0505',
+        padding: 8,
+        borderRadius: 6,
     },
     listCategory: {
         paddingTop: 20,
@@ -182,7 +184,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        width: '25%'
+        width: '30%',
     },
     text: {
         fontFamily: 'times new roman',

@@ -23,7 +23,7 @@ const CategoryCreateScreen = ({ navigation }) => {
                 <TouchableOpacity onPress={hanldeBack}>
                     <Icon name='arrow-back' size={30} />
                 </TouchableOpacity>
-                <Text style={styles.textTitle}>Chỉnh sửa thể loại</Text>
+                <Text style={styles.textTitle}>Thêm thể loại</Text>
                 <View style={{ width: 30 }}></View>
             </View>
             <View style={styles.form}>

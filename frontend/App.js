@@ -9,6 +9,8 @@ import CategoryScreen from './src/screens/categories/CategoryScreen';
 import { store } from './src/redux/store';
 import CategoryEditScreen from './src/screens/categories/CategoryEditScreen';
 import CategoryCreateScreen from './src/screens/categories/CategoryCreateScreen';
+import BookCreateScreen from './src/screens/books/BookCreateScreen';
+import BookEditScreen from './src/screens/books/BookEditScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -20,9 +22,12 @@ const App = () => {
         <Stack.Navigator initialRouteName='Home'>
           <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
           <Stack.Screen name="Book" component={BookScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="BookCreate" component={BookCreateScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="BookEdit" component={BookEditScreen} options={{ headerShown: false }} />
           <Stack.Screen name="Category" component={CategoryScreen} options={{ headerShown: false }} />
           <Stack.Screen name="CategoryEdit" component={CategoryEditScreen} options={{ headerShown: false }} />
           <Stack.Screen name="CategoryNew" component={CategoryCreateScreen} options={{ headerShown: false }} />
+          
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

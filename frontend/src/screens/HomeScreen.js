@@ -10,7 +10,7 @@ const HomeScreen = ({ navigation }) => {
                 style={styles.button}
                 onPress={() => navigation.navigate('Book')}
             >
-                <Text style={styles.buttonText}>Danh sách sách</Text>
+                <Text style={styles.buttonText}>Danh mục sách</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
         marginBottom: 40,
+        fontFamily: 'times new roman'
     },
     button: {
         backgroundColor: '#4a90e2',
@@ -48,5 +49,7 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 16,
         textAlign: 'center',
+        fontFamily: 'times new roman',
+        fontWeight: 'bold'
     },
 });

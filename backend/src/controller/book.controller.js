@@ -10,24 +10,43 @@ class BookController {
         }
     }
     
-    async create(req, res){
+    async create(req, res) {
         try {
-            const book = await bookServices.addBook(req.body);
-            res.status(201).json(book);
-        } catch (error) {
+            const { title, author, description, categoryId } = req.body;
+            const imagePath = req.file ? `uploads/${req.file.filename}` : null;
+    
+            const newBook = await bookServices.addBook({
+                title,
+                author,
+                description,
+                categoryId,
+                image: imagePath,
+            });
+    
+            res.status(201).json(newBook);
+        } catch (err) {
+            console.error('Lỗi tạo sách:', err);
             res.status(500).json({ error: err.message });
         }
-    }
+    }    
     
     async update(req, res){
         try {
             const id = parseInt(req.params.id);
-            const data = req.body
+            const { title, author, description, categoryId } = req.body;
+            const imagePath = req.file ? `uploads/${req.file.filename}` : null;
+            const data = {
+                title,
+                author,
+                description,
+                categoryId,
+                image: imagePath,
+            };
             const update = await bookServices.editBook(id, data);
             res.json(update);
         } catch (error) {
             console.error('Lỗi cập nhật sách:', error);
-            res.status(500).json({ error: err.message || "Update failed"});
+            res.status(500).json({ error: error.message || "Update failed"});
         }
     }
 
@@ -48,7 +67,7 @@ class BookController {
             res.status(204).end();
         } catch (error) {
             console.error('Lỗi xóa sách:', error);
-            res.status(500).json({ error: err.message});
+            res.status(500).json({ error: error.message});
         }
     }
 }
